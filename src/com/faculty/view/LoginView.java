@@ -1,4 +1,9 @@
 package com.faculty.view;
 
-public class LoginView {
+import javax.swing.*;
+
+public class LoginView extends JFrame {
+
+
+
 }
