@@ -9,6 +9,7 @@ public class Main {
         LoginView loginView = new LoginView();
 
 
+        loginView.setVisible(true);
 
 
     }
