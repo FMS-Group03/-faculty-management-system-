@@ -20,6 +20,7 @@ public class LoginView extends JFrame {
     private JPasswordField txtConfirmPassword;
     private JLabel lblUser, lblPass, lblConfirmPass, lblRole;
     private JButton btnSignIn;
+
     private JToggleButton tglAdmin, tglStudent, tglLecturer;
     private ButtonGroup roleGroup;
     private JPanel rolePanel;
@@ -29,7 +30,7 @@ public class LoginView extends JFrame {
 
     public LoginView() {
         setTitle("Faculty Management System");
-        setSize(1000, 700);
+        setSize(1020, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(1, 2));
@@ -139,11 +140,14 @@ public class LoginView extends JFrame {
         rolePanel = new JPanel(new GridLayout(1, 3, 10, 0));
         rolePanel.setBackground(Color.WHITE);
         roleGroup = new ButtonGroup();
+
         tglAdmin = createRoleButton("Admin");
         tglStudent = createRoleButton("Student");
         tglLecturer = createRoleButton("Lecturer");
+
         tglAdmin.setSelected(true);
         updateRoleButtonStyles();
+
         rolePanel.add(tglAdmin);
         rolePanel.add(tglStudent);
         rolePanel.add(tglLecturer);
@@ -174,6 +178,7 @@ public class LoginView extends JFrame {
 
         add(rightPanel);
     }
+
 
     public void toggleAuthMode(String mode) {
         boolean isSignUp = mode.equals("SignUp");
@@ -223,6 +228,19 @@ public class LoginView extends JFrame {
         btnSignIn.setBounds(60, 560, 370, 55);
     }
 
+    public void updateRoleButtonStyles() {
+        JToggleButton[] buttons = {tglAdmin, tglStudent, tglLecturer};
+        for (JToggleButton btn : buttons) {
+            if (btn.isSelected()) {
+                btn.setBackground(BTN_DEFAULT);
+                btn.setForeground(Color.WHITE);
+            } else {
+                btn.setBackground(new Color(220, 220, 220));
+                btn.setForeground(Color.WHITE);
+            }
+        }
+    }
+
     private void styleTextField(JTextField field) {
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         field.setForeground(Color.DARK_GRAY);
@@ -255,29 +273,54 @@ public class LoginView extends JFrame {
         return btn;
     }
 
-    public void updateRoleButtonStyles() {
-        JToggleButton[] buttons = {tglAdmin, tglStudent, tglLecturer};
-        for (JToggleButton btn : buttons) {
-            if (btn.isSelected()) {
-                btn.setBackground(BTN_DEFAULT);
-                btn.setForeground(Color.WHITE);
-            } else {
-                btn.setBackground(new Color(220, 220, 220));
-                btn.setForeground(Color.WHITE);
-            }
-        }
+
+    public String getUsernameInput() {
+        return txtUsername.getText().trim();
+    }
+
+    public String getPasswordInput() {
+        return new String(txtPassword.getPassword());
+    }
+
+    public String getConfirmPasswordInput() {
+        return new String(txtConfirmPassword.getPassword());
+    }
+
+    public String getSelectedRole() {
+        if (tglAdmin.isSelected()) return "Admin";
+        if (tglStudent.isSelected()) return "Student";
+        if (tglLecturer.isSelected()) return "Lecturer";
+        return null;
+    }
+
+    public JButton getBtnSignIn() {
+        return btnSignIn;
     }
 
     public void addSignInTabListener(MouseListener listener) {
         lblSignInTab.addMouseListener(listener);
     }
+
     public void addSignUpTabListener(MouseListener listener) {
         lblSignUpTab.addMouseListener(listener);
     }
+
     public void addRoleButtonListener(ActionListener listener) {
         tglAdmin.addActionListener(listener);
         tglStudent.addActionListener(listener);
         tglLecturer.addActionListener(listener);
+    }
+
+    public void addSignInButtonListener(ActionListener listener) {
+        btnSignIn.addActionListener(listener);
+    }
+
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 }
 

@@ -2,13 +2,12 @@ package com.faculty.main;
 
 import com.faculty.controller.LoginController;
 import com.faculty.view.LoginView;
-import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginView view = new LoginView();
-            new LoginController(view);
-        });
+
+        LoginView view = new LoginView();
+
+        new LoginController(view);
     }
 }
