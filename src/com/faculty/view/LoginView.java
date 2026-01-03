@@ -301,21 +301,21 @@ public class LoginView extends JFrame implements ActionListener {
             String password = new String(txtPassword.getPassword());
             String role = tglAdmin.isSelected() ? "Admin" : tglStudent.isSelected() ? "Student" : "Lecturer";
 
-            // Controller එකේ instance එකක් සාදා (හෝ දැනට පවතින එකක් භාවිතා කර) දත්ත යවන්න
+
             LoginController controller = new LoginController();
 
             if (btnSignIn.getText().equals("Sign In")) {
-                // Controller එකේ login logic එක call කිරීම
+
                 boolean success = controller.handleLogin(username, password, role);
                 if (success) {
-                    this.dispose(); // Login සාර්ථක නම් window එක වසන්න
+                    this.dispose();
                 }
             } else {
                 String confirmPass = new String(txtConfirmPassword.getPassword());
                 if (!password.equals(confirmPass)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    // Controller එකේ signup logic එක call කිරීම
+
                     controller.handleSignUp(username, password, role);
                 }
             }
