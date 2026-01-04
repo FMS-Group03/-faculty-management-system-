@@ -94,7 +94,7 @@ public class LoginController {
             }
 
         }
-        // 👉 SIGN IN MODE
+        //  SIGN IN MODE
         else {
                 boolean success = userDAO.loginUser(username, password, role);
 
@@ -151,4 +151,30 @@ public class LoginController {
         }
     }
 
+
+
+        // Close login window first
+        view.dispose();
+
+        // Open the Student Dashboard on the Event Dispatch Thread
+        if ("Student".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                new StudentDashboardView(username).setVisible(true);
+            });
+        } else if ("Admin".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
+            });
+        } else if ("Lecturer".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
+            });
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Invalid Role!");
+            });
+        }
+    }
+
+ 
 }
