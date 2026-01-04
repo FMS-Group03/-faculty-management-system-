@@ -1,5 +1,9 @@
 package com.faculty.controller;
 
+ CS_2022_042
+public class AdminController {
+}
+
 import com.faculty.view.AdminDashboardView;
 import com.faculty.view.AdminDashboardView.ManagementPanel;
 import com.faculty.view.LoginView;
@@ -33,7 +37,7 @@ public class AdminController {
         });
 
         // 2. CRUD Logic for each Panel
-        // Since logic is the same, we reuse the method!
+        // Since logic is the same, we reuse the metho
         setupCRUDLogic(view.studentPanel, "Student");
         setupCRUDLogic(view.lecturerPanel, "Lecturer");
         setupCRUDLogic(view.coursePanel, "Course");
@@ -114,3 +118,4 @@ public class AdminController {
         });
     }
 }
+
