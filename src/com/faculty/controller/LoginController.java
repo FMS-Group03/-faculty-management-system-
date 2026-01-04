@@ -2,11 +2,14 @@ package com.faculty.controller;
 
 import com.faculty.model.User;
 import com.faculty.view.LoginView;
-
+import com.faculty.view.StudentDashboardView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class LoginController {
 
@@ -89,16 +92,51 @@ public class LoginController {
         view.toggleAuthMode("SignIn");
     }
 
-    private void handleSignIn(String username, String password, String role) {
-        // 1. Create temporary User object for comparison
-        User loginAttempt = new User(username, password, role);
+//    private void handleSignIn(String username, String password, String role) {
+//        // 1. Create temporary User object for comparison
+//        User loginAttempt = new User(username, password, role);
+//
+//        System.out.println("Attempting Login: " + loginAttempt.toString());
+//
+//        if (password.length() < 4) {
+//            view.showErrorMessage("Invalid Credentials (Password too short)");
+//        } else {
+//            view.showSuccessMessage("Welcome back, " + username + "!");
+//        }
+//    }
 
+    //by cs 22010 me
+    private void handleSignIn(String username, String password, String role) {
+        User loginAttempt = new User(username, password, role);
         System.out.println("Attempting Login: " + loginAttempt.toString());
 
         if (password.length() < 4) {
             view.showErrorMessage("Invalid Credentials (Password too short)");
+            return;
+        }
+
+        // Close login window first
+        view.dispose();
+
+        // Open the Student Dashboard on the Event Dispatch Thread
+        if ("Student".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                new StudentDashboardView(username).setVisible(true);
+            });
+        } else if ("Admin".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
+            });
+        } else if ("Lecturer".equals(role)) {
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
+            });
         } else {
-            view.showSuccessMessage("Welcome back, " + username + "!");
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null, "Invalid Role!");
+            });
         }
     }
+
+
 }
