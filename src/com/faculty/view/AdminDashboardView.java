@@ -1,9 +1,5 @@
 package com.faculty.view;
 
- CS_2022_042
-public class AdminDashboardView {
-}
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -268,4 +264,3 @@ public class AdminDashboardView extends JFrame {
         }
     }
 }
- main

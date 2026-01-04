@@ -11,17 +11,8 @@ import com.faculty.controller.StudentController;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import javax.swing.SwingUtilities;
-
 public class Main {
     public static void main(String[] args) {
- CS_2022_042
-        SwingUtilities.invokeLater(() -> {
-            LoginView view = new LoginView();
-            new LoginController(view);
-        });
-
-
 
         //me
         SwingUtilities.invokeLater(() -> {
@@ -44,11 +35,5 @@ public class Main {
 //            AdminDashboardView  View = new AdminDashboardView();
 //            new AdminController(View);
         });
-//        LoginView view = new LoginView();
-//
-//        new LoginController(view);
-        AdminDashboardView view = new AdminDashboardView();
-        new AdminController(view);
- 
     }
 }
