@@ -151,8 +151,4 @@ public class LoginController {
         }
     }
 
-
-
-
- main
 }
