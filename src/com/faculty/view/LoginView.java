@@ -1,17 +1,16 @@
 package com.faculty.view;
 
-import com.faculty.controller.LoginController;
-
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
-public class LoginView extends JFrame implements ActionListener {
+public class LoginView extends JFrame {
 
     private final Color PRIMARY_PURPLE = new Color(124, 77, 255);
     private final Color BG_LIGHT_PURPLE = new Color(140, 82, 255);
-
     private final Color BTN_DEFAULT = new Color(140, 82, 255);
     private final Color BTN_HOVER = new Color(160, 110, 255);
     private final Color BTN_CLICK = new Color(100, 60, 200);
@@ -21,6 +20,7 @@ public class LoginView extends JFrame implements ActionListener {
     private JPasswordField txtConfirmPassword;
     private JLabel lblUser, lblPass, lblConfirmPass, lblRole;
     private JButton btnSignIn;
+
     private JToggleButton tglAdmin, tglStudent, tglLecturer;
     private ButtonGroup roleGroup;
     private JPanel rolePanel;
@@ -30,7 +30,7 @@ public class LoginView extends JFrame implements ActionListener {
 
     public LoginView() {
         setTitle("Faculty Management System");
-        setSize(1000, 700);
+        setSize(1020, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(1, 2));
@@ -38,6 +38,7 @@ public class LoginView extends JFrame implements ActionListener {
         initLeftPanel();
         initRightPanel();
 
+        setVisible(true);
     }
 
     private void initLeftPanel() {
@@ -93,14 +94,7 @@ public class LoginView extends JFrame implements ActionListener {
         lblSignUpTab = new JLabel("     Sign Up     ");
         lblSignUpTab.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblSignUpTab.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblSignUpTab.setBounds(260, 30, 200, 40);
-
-        lblSignInTab.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { toggleAuthMode("SignIn"); }
-        });
-        lblSignUpTab.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { toggleAuthMode("SignUp"); }
-        });
+        lblSignUpTab.setBounds(260, 30, 180, 40);
 
         rightPanel.add(lblSignInTab);
         rightPanel.add(lblSignUpTab);
@@ -146,11 +140,14 @@ public class LoginView extends JFrame implements ActionListener {
         rolePanel = new JPanel(new GridLayout(1, 3, 10, 0));
         rolePanel.setBackground(Color.WHITE);
         roleGroup = new ButtonGroup();
+
         tglAdmin = createRoleButton("Admin");
         tglStudent = createRoleButton("Student");
         tglLecturer = createRoleButton("Lecturer");
+
         tglAdmin.setSelected(true);
         updateRoleButtonStyles();
+
         rolePanel.add(tglAdmin);
         rolePanel.add(tglStudent);
         rolePanel.add(tglLecturer);
@@ -175,10 +172,6 @@ public class LoginView extends JFrame implements ActionListener {
         btnSignIn.setContentAreaFilled(false);
         btnSignIn.setBorderPainted(false);
         btnSignIn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // ✅ Add ActionListener
-        btnSignIn.addActionListener(this);
-
         rightPanel.add(btnSignIn);
 
         toggleAuthMode("SignIn");
@@ -186,7 +179,9 @@ public class LoginView extends JFrame implements ActionListener {
         add(rightPanel);
     }
 
-    private void toggleAuthMode(String mode) {
+
+    public void toggleAuthMode(String mode) {
+        this.authmode = mode;
         boolean isSignUp = mode.equals("SignUp");
 
         if (isSignUp) {
@@ -196,12 +191,9 @@ public class LoginView extends JFrame implements ActionListener {
             lblSignInTab.setBorder(null);
 
             btnSignIn.setText("Sign Up");
-
             lblConfirmPass.setVisible(true);
             txtConfirmPassword.setVisible(true);
-
             setupSignUpLayout();
-
         } else {
             lblSignInTab.setForeground(PRIMARY_PURPLE);
             lblSignInTab.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, PRIMARY_PURPLE));
@@ -209,10 +201,8 @@ public class LoginView extends JFrame implements ActionListener {
             lblSignUpTab.setBorder(null);
 
             btnSignIn.setText("Sign In");
-
             lblConfirmPass.setVisible(false);
             txtConfirmPassword.setVisible(false);
-
             setupSignInLayout();
         }
     }
@@ -220,30 +210,36 @@ public class LoginView extends JFrame implements ActionListener {
     private void setupSignInLayout() {
         lblUser.setBounds(60, 140, 200, 30);
         txtUsername.setBounds(60, 185, 370, 50);
-
         lblPass.setBounds(60, 280, 200, 30);
         txtPassword.setBounds(60, 325, 370, 50);
-
         lblRole.setBounds(60, 400, 200, 30);
         rolePanel.setBounds(60, 450, 370, 45);
-
         btnSignIn.setBounds(60, 560, 370, 55);
     }
 
     private void setupSignUpLayout() {
         lblUser.setBounds(60, 110, 200, 30);
         txtUsername.setBounds(60, 150, 370, 50);
-
         lblPass.setBounds(60, 220, 200, 30);
         txtPassword.setBounds(60, 260, 370, 50);
-
         lblConfirmPass.setBounds(60, 330, 250, 30);
         txtConfirmPassword.setBounds(60, 370, 370, 50);
-
         lblRole.setBounds(60, 440, 200, 30);
         rolePanel.setBounds(60, 480, 370, 45);
-
         btnSignIn.setBounds(60, 560, 370, 55);
+    }
+
+    public void updateRoleButtonStyles() {
+        JToggleButton[] buttons = {tglAdmin, tglStudent, tglLecturer};
+        for (JToggleButton btn : buttons) {
+            if (btn.isSelected()) {
+                btn.setBackground(BTN_DEFAULT);
+                btn.setForeground(Color.WHITE);
+            } else {
+                btn.setBackground(new Color(220, 220, 220));
+                btn.setForeground(Color.WHITE);
+            }
+        }
     }
 
     private void styleTextField(JTextField field) {
@@ -274,60 +270,88 @@ public class LoginView extends JFrame implements ActionListener {
         btn.setBorderPainted(false);
         btn.setBackground(BTN_DEFAULT);
         btn.setForeground(Color.WHITE);
-
-        btn.addActionListener(e -> updateRoleButtonStyles());
         roleGroup.add(btn);
         return btn;
     }
 
-    private void updateRoleButtonStyles() {
-        JToggleButton[] buttons = {tglAdmin, tglStudent, tglLecturer};
-        for (JToggleButton btn : buttons) {
-            if (btn.isSelected()) {
-                btn.setBackground(BTN_DEFAULT);
-                btn.setForeground(Color.WHITE);
-            } else {
-                btn.setBackground(new Color(220, 220, 220));
-                btn.setForeground(Color.WHITE);
-            }
-        }
+
+    public String getUsernameInput() {
+        return txtUsername.getText().trim();
     }
 
-    // ✅ ActionListener implementation
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnSignIn) {
-            String username = txtUsername.getText();
-            String password = new String(txtPassword.getPassword());
-            String role = tglAdmin.isSelected() ? "Admin" : tglStudent.isSelected() ? "Student" : "Lecturer";
-
-
-            LoginController controller = new LoginController();
-
-            if (btnSignIn.getText().equals("Sign In")) {
-
-                boolean success = controller.handleLogin(username, password, role);
-                if (success) {
-                    this.dispose();
-                }
-            } else {
-                String confirmPass = new String(txtConfirmPassword.getPassword());
-                if (!password.equals(confirmPass)) {
-                    JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-
-                    controller.handleSignUp(username, password, role);
-                }
-            }
-        }
+    public String getPasswordInput() {
+        return new String(txtPassword.getPassword());
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginView());
+    public String getConfirmPasswordInput() {
+        return new String(txtConfirmPassword.getPassword());
+    }
+
+    public String getSelectedRole() {
+        if (tglAdmin.isSelected()) return "Admin";
+        if (tglStudent.isSelected()) return "Student";
+        if (tglLecturer.isSelected()) return "Lecturer";
+        return null;
+    }
+
+    public JButton getBtnSignIn() {
+        return btnSignIn;
+    }
+
+    public void addSignInTabListener(MouseListener listener) {
+        lblSignInTab.addMouseListener(listener);
+    }
+
+    public void addSignUpTabListener(MouseListener listener) {
+        lblSignUpTab.addMouseListener(listener);
+    }
+
+    public void addRoleButtonListener(ActionListener listener) {
+        tglAdmin.addActionListener(listener);
+        tglStudent.addActionListener(listener);
+        tglLecturer.addActionListener(listener);
+    }
+
+    public void addSignInButtonListener(ActionListener listener) {
+        btnSignIn.addActionListener(listener);
+    }
+
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private String authmode = "SignIn";
+
+
+    public String getAuthMode() {
+        return authmode;
+    }
+
+    public Label getTxtUsername() {
+        return null;
+    }
+
+    public Label getTxtPassword() {
+
+
+        return null;
+    }
+
+    public Label getTxtConfirmPassword() {
+        return null;
+    }
+
+    public AbstractButton getTglAdmin() {
+        return null;
     }
 }
 
-class RoundedBorder implements javax.swing.border.Border {
+
+class RoundedBorder implements Border {
     private int radius;
     private Color color;
 
@@ -349,4 +373,13 @@ class RoundedBorder implements javax.swing.border.Border {
         g2.setStroke(new BasicStroke(2));
         g2.drawRoundRect(x + 1, y + 1, width - 2, height - 2, radius, radius);
     }
+
+
+
+
+
+
+
+
+
 }
