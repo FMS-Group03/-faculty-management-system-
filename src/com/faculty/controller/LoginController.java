@@ -1,10 +1,14 @@
 package com.faculty.controller;
 
+import com.faculty.dao.UserDAO;
 import com.faculty.model.User;
 import com.faculty.view.LoginView;
 import com.faculty.view.StudentDashboardView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+
+ main
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,85 +17,94 @@ import javax.swing.SwingUtilities;
 
 public class LoginController {
 
-    private LoginView view;
-
-    private boolean isSignUpMode = false;
+    private final LoginView view;
+    private final UserDAO userDAO;
 
     public LoginController(LoginView view) {
         this.view = view;
+        this.userDAO = new UserDAO();
         initController();
     }
 
     private void initController() {
 
-        this.view.addSignInTabListener(new MouseAdapter() {
+        // Switch to Sign In
+        view.addSignInTabListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                isSignUpMode = false; // Update state
                 view.toggleAuthMode("SignIn");
             }
         });
 
-        this.view.addSignUpTabListener(new MouseAdapter() {
+        // Switch to Sign Up
+        view.addSignUpTabListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                isSignUpMode = true;
                 view.toggleAuthMode("SignUp");
             }
         });
 
+        // Fix role button styles
+        view.addRoleButtonListener(e -> view.updateRoleButtonStyles());
 
-        this.view.addRoleButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.updateRoleButtonStyles();
-            }
-        });
-
-        this.view.addSignInButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAuthAction();
-            }
-        });
+        // Main button (Sign In / Sign Up)
+        view.addSignInButtonListener(e -> handleSubmit());
     }
 
-    private void handleAuthAction() {
-        String username = view.getUsernameInput();
-        String password = view.getPasswordInput();
+    private void clearSignUpForm() {
+        view.getTxtUsername().setText("");
+        view.getTxtPassword().setText("");
+        view.getTxtConfirmPassword().setText("");
+
+        view.getTglAdmin().setSelected(true);
+        view.updateRoleButtonStyles();
+    }
+
+    private void handleSubmit() {
+
+        String username = view.getUsernameInput().trim();
+        String password = view.getPasswordInput().trim();
+        String mode = view.getAuthMode();
         String role = view.getSelectedRole();
 
-
+        // Common validation
         if (username.isEmpty() || password.isEmpty()) {
             view.showErrorMessage("Username and Password cannot be empty!");
             return;
         }
 
-        if (isSignUpMode) {
-            handleSignUp(username, password, role);
-        } else {
-            handleSignIn(username, password, role);
+
+
+        if (mode.equals("SignUp")) {
+            String confirmPassword = view.getConfirmPasswordInput().trim();
+
+            if (!password.equals(confirmPassword)) {
+                view.showErrorMessage("Passwords do not match!");
+                return;
+            }
+
+            User user = new User(username, password, role);
+            boolean success = userDAO.registerUser(user);
+
+            if (success) {
+                view.showSuccessMessage("Account created successfully!");
+                clearSignUpForm();
+            } else {
+                view.showErrorMessage("Signup failed (username may exist)");
+            }
+
+        }
+        // 👉 SIGN IN MODE
+        else {
+                boolean success = userDAO.loginUser(username, password, role);
+
+                if (success){
+                    view.showSuccessMessage("Login successfull Welcome, " + username + " !");
+                }else{
+                    view.showErrorMessage("Login failed!");
+                }
         }
     }
-
-    private void handleSignUp(String username, String password, String role) {
-        String confirmPass = view.getConfirmPasswordInput();
-
-        if (!password.equals(confirmPass)) {
-            view.showErrorMessage("Passwords do not match!");
-            return;
-        }
-
-        User newUser = new User(username, password, role);
-
-        System.out.println("Registering: " + newUser.toString());
-
-        view.showSuccessMessage("Account created successfully for " + role + "!");
-
-        isSignUpMode = false;
-        view.toggleAuthMode("SignIn");
-    }
-
 //    private void handleSignIn(String username, String password, String role) {
 //        // 1. Create temporary User object for comparison
 //        User loginAttempt = new User(username, password, role);
@@ -139,4 +152,7 @@ public class LoginController {
     }
 
 
+
+
+ main
 }
