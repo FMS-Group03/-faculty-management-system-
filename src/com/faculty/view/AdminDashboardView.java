@@ -32,7 +32,7 @@ public class AdminDashboardView extends JFrame {
 
     public AdminDashboardView() {
         setTitle("Admin Dashboard - Faculty Management System");
-        setSize(1200, 750);
+        setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
