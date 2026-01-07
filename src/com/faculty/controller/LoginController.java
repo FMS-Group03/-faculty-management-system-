@@ -105,6 +105,7 @@ public class LoginController {
                 }
         }
     }
+    
 //    private void handleSignIn(String username, String password, String role) {
 //        // 1. Create temporary User object for comparison
 //        User loginAttempt = new User(username, password, role);
@@ -118,7 +119,7 @@ public class LoginController {
 //        }
 //    }
 
-    //by cs 22010 me
+    // 010
     private void handleSignIn(String username, String password, String role) {
         User loginAttempt = new User(username, password, role);
         System.out.println("Attempting Login: " + loginAttempt.toString());
@@ -127,31 +128,6 @@ public class LoginController {
             view.showErrorMessage("Invalid Credentials (Password too short)");
             return;
         }
-
-        // Close login window first
-        view.dispose();
-
-        // Open the Student Dashboard on the Event Dispatch Thread
-        if ("Student".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                new StudentDashboardView(username).setVisible(true);
-            });
-        } else if ("Admin".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
-            });
-        } else if ("Lecturer".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
-            });
-        } else {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Invalid Role!");
-            });
-        }
-    }
-
-
 
         // Close login window first
         view.dispose();
