@@ -101,6 +101,22 @@ public class LoginController {
     }
 
     // This method handles opening the dashboard
+    
+//    private void handleSignIn(String username, String password, String role) {
+//        // 1. Create temporary User object for comparison
+//        User loginAttempt = new User(username, password, role);
+//
+//        System.out.println("Attempting Login: " + loginAttempt.toString());
+//
+//        if (password.length() < 4) {
+//            view.showErrorMessage("Invalid Credentials (Password too short)");
+//        } else {
+//            view.showSuccessMessage("Welcome back, " + username + "!");
+//        }
+//    }
+
+    // 010
+
     private void handleSignIn(String username, String password, String role) {
         User loginAttempt = new User(username, password, role);
         System.out.println("Attempting Login: " + loginAttempt.toString());
@@ -129,12 +145,15 @@ public class LoginController {
             });
         } else if ("Lecturer".equals(role)) {
             SwingUtilities.invokeLater(() -> {
+              
 //                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
 //                new LecturerDashboardView(username).setVisible(true);
                 LecturerDashboardView view = new LecturerDashboardView(username);
                 new LecturerController(view, username);   // pass lecturerId
                 view.setVisible(true);
 
+
+                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
 
             });
         } else {
@@ -143,4 +162,9 @@ public class LoginController {
             });
         }
     }
+
 }
+
+ 
+}
+
