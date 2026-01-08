@@ -2,18 +2,14 @@ package com.faculty.controller;
 
 import com.faculty.dao.UserDAO;
 import com.faculty.model.User;
+import com.faculty.view.AdminDashboardView;
+import com.faculty.view.LecturerDashboardView;
 import com.faculty.view.LoginView;
 import com.faculty.view.StudentDashboardView;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-
-
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class LoginController {
 
@@ -27,7 +23,6 @@ public class LoginController {
     }
 
     private void initController() {
-
         // Switch to Sign In
         view.addSignInTabListener(new MouseAdapter() {
             @Override
@@ -73,8 +68,6 @@ public class LoginController {
             return;
         }
 
-
-
         if (mode.equals("SignUp")) {
             String confirmPassword = view.getConfirmPasswordInput().trim();
 
@@ -96,15 +89,18 @@ public class LoginController {
         }
         //  SIGN IN MODE
         else {
-                boolean success = userDAO.loginUser(username, password, role);
+            boolean success = userDAO.loginUser(username, password, role);
 
-                if (success){
-                    view.showSuccessMessage("Login successfull Welcome, " + username + " !");
-                }else{
-                    view.showErrorMessage("Login failed!");
-                }
+            if (success) {
+                // FIXED: Now we actually call the method that opens the dashboard
+                handleSignIn(username, password, role);
+            } else {
+                view.showErrorMessage("Login failed!");
+            }
         }
     }
+
+    // This method handles opening the dashboard
     
 //    private void handleSignIn(String username, String password, String role) {
 //        // 1. Create temporary User object for comparison
@@ -120,10 +116,12 @@ public class LoginController {
 //    }
 
     // 010
+
     private void handleSignIn(String username, String password, String role) {
         User loginAttempt = new User(username, password, role);
         System.out.println("Attempting Login: " + loginAttempt.toString());
 
+        // Note: You might not need this length check here if userDAO.loginUser() already verified the user
         if (password.length() < 4) {
             view.showErrorMessage("Invalid Credentials (Password too short)");
             return;
@@ -132,18 +130,31 @@ public class LoginController {
         // Close login window first
         view.dispose();
 
-        // Open the Student Dashboard on the Event Dispatch Thread
+        // Open the Dashboard based on Role
         if ("Student".equals(role)) {
             SwingUtilities.invokeLater(() -> {
-                new StudentDashboardView(username).setVisible(true);
+                StudentDashboardView studentView = new StudentDashboardView(username);
+                new StudentController(studentView);
+                studentView.setVisible(true);
+
             });
         } else if ("Admin".equals(role)) {
             SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
+//                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
+                new AdminDashboardView(username).setVisible(true);
             });
         } else if ("Lecturer".equals(role)) {
             SwingUtilities.invokeLater(() -> {
+              
+//                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
+//                new LecturerDashboardView(username).setVisible(true);
+                LecturerDashboardView view = new LecturerDashboardView(username);
+                new LecturerController(view, username);   // pass lecturerId
+                view.setVisible(true);
+
+
                 JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
+
             });
         } else {
             SwingUtilities.invokeLater(() -> {
@@ -152,5 +163,8 @@ public class LoginController {
         }
     }
 
+}
+
  
 }
+

@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -30,7 +29,7 @@ public class AdminDashboardView extends JFrame {
     public final ManagementPanel deptPanel;
     public final ManagementPanel degreePanel;
 
-    public AdminDashboardView() {
+    public AdminDashboardView(String username) {
         setTitle("Admin Dashboard - Faculty Management System");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
