@@ -1,54 +1,60 @@
 package com.faculty.controller;
 
+import com.faculty.dao.UserDAO;
+import com.faculty.model.Student;
 import com.faculty.view.StudentDashboardView;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class StudentController {
 
     private StudentDashboardView view;
+    private UserDAO dao;
 
     public StudentController(StudentDashboardView view) {
         this.view = view;
+        this.dao = new UserDAO();
+
+
         initController();
     }
 
-    // Initialize all listeners
+
     private void initController() {
         view.getProfileSaveButton().addActionListener(e -> saveProfile());
     }
 
     // Save profile method
     private void saveProfile() {
-        JTextField[] fields = view.getProfileFields();
-        boolean hasEmpty = false;
 
-        // Reset all borders to default
-        for (JTextField field : fields) {
-            field.setBorder(new StudentDashboardView.DashRoundedBorder(view.getBtnProfile().getBackground(), 20));
-        }
+        String name   = view.getTfName().getText().trim();
+        String id     = view.getTfId().getText().trim();
+        String degree = view.getTfDegree().getText().trim();
+        String email  = view.getTfEmail().getText().trim();
+        String mobile = view.getTfMobile().getText().trim();
 
-        // Check each field for empty value
-        for (JTextField field : fields) {
-            if (field.getText().trim().isEmpty()) {
-                // Highlight empty fields
-                field.setBorder(new StudentDashboardView.DashRoundedBorder(java.awt.Color.RED, 20));
-                hasEmpty = true;
-            }
-        }
-
-        if (hasEmpty) {
-            view.showErrorMessage("All profile details must be filled!");
-            // Focus the first empty field
-            for (JTextField field : fields) {
-                if (field.getText().trim().isEmpty()) {
-                    field.requestFocus();
-                    break;
-                }
-            }
+        // Validation
+        if (name.isEmpty() || id.isEmpty()) {
+            view.showErrorMessage("Name and Student ID are required!");
             return;
         }
-        view.showSuccessMessage("Profile updated successfully!");
+
+        Student student = new Student(id, name, degree, email, mobile);
+
+        boolean success;
+
+        if (dao.studentExists(id)) {
+            success = dao.updateStudent(student);
+        } else {
+            success = dao.addStudent(student);
+        }
+
+        if (success) {
+            view.showSuccessMessage("Profile saved successfully!");
+        } else {
+            view.showErrorMessage("Failed to save profile!");
+        }
     }
 }

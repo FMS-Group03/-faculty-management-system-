@@ -2,6 +2,7 @@ package com.faculty.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DBConnection {
@@ -12,18 +13,23 @@ public class DBConnection {
 
     private Connection connection;
 
-    // Constructor
     public DBConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Load driver
-            connection = DriverManager.getConnection(url, username, password); // Initialize connection
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(url, username, password);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Getter to provide connection to other classes
-    public Connection getConnection() {
+    public Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(url, username, password);
+        }
         return connection;
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return getConnection().prepareStatement(sql);
     }
 }

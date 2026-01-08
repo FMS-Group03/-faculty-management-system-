@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
+
 public class StudentDashboardView extends JFrame {
 
     private final Color PRIMARY_PURPLE = new Color(140, 82, 255);

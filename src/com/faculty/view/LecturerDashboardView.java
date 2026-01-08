@@ -269,6 +269,10 @@ public class LecturerDashboardView extends JFrame {
         return new JTextField[]{tfName, tfLecturerId, tfDepartment, tfEmail, tfMobile};
     }
 
+    public AbstractButton getTfLecturerId() {
+        return null;
+    }
+
     public static class DashRoundedBorder implements javax.swing.border.Border {
         private int radius;
         private Color color;
