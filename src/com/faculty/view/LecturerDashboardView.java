@@ -76,6 +76,31 @@ public class LecturerDashboardView extends JFrame {
         sidebar.add(btnSchedule);
         sidebar.add(btnCourses);
 
+        JButton btnLogout = new JButton("\u21B3") {
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btnLogout.setFont(new Font("Segoe UI Symbol", Font.BOLD, 35));
+        btnLogout.setForeground(PRIMARY_PURPLE);
+        btnLogout.setBounds(115, 600, 70, 70);
+        btnLogout.setContentAreaFilled(false);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setFocusPainted(false);
+        btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnLogout.addActionListener(e -> {
+            this.dispose();
+            new LoginView().setVisible(true);
+        });
+
+        sidebar.add(btnLogout);
+
         return sidebar;
     }
 
