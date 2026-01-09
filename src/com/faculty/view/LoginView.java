@@ -30,7 +30,7 @@ public class LoginView extends JFrame {
 
     public LoginView() {
         setTitle("Faculty Management System");
-        setSize(1020, 700);
+        setSize(1030, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(1, 2));
