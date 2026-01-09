@@ -8,30 +8,10 @@ import com.faculty.model.Lecturer;
 import com.faculty.model.Course;
 import java.util.List;
 
-
-
-
 public class LecturerController {
     private LecturerDashboardView view;
     private UserDAO dao;
     private String lecturerId;
-
-
-
-    private void loadCourses() {
-
-
-        List<Course> courses = dao.getCoursesByLecturer(lecturerId);
-
-        for (Course c : courses) {
-            view.getCourseModel().addRow(
-                    new Object[]{c.getCourseCode(), c.getCourseName()}
-            );
-        }
-    }
-
-
-
 
     public LecturerController(LecturerDashboardView view, String lecturerId) {
         this.view = view;
@@ -41,6 +21,15 @@ public class LecturerController {
         loadCourses();
     }
 
+    private void loadCourses() {
+        List<Course> courses = dao.getCoursesByLecturer(lecturerId);
+        view.getCourseModel().setRowCount(0); // Clear existing rows
+        for (Course c : courses) {
+            view.getCourseModel().addRow(
+                    new Object[]{c.getCourseCode(), c.getCourseName()}
+            );
+        }
+    }
 
     private void initController() {
         view.getProfileSaveButton().addActionListener(e -> saveLecturerProfile());
@@ -50,7 +39,6 @@ public class LecturerController {
         });
 
         view.getBtnAddCourse().addActionListener(e -> {
-
             String courseCode = view.getTfCourseCode().getText().trim();
             String courseName = view.getTfCourseName().getText().trim();
 
@@ -69,15 +57,10 @@ public class LecturerController {
             } else {
                 view.showErrorMessage("Failed to save course!");
             }
-
         });
-
-
-
     }
 
     private void saveLecturerProfile() {
-
         JTextField[] fields = view.getProfileFields();
 
         for (JTextField field : fields) {
@@ -95,9 +78,7 @@ public class LecturerController {
 
         Lecturer lecturer = new Lecturer(id, name, department, email, mobile);
 
-        UserDAO dao = new UserDAO();
         boolean success;
-
         if (dao.lecturerExists(id)) {
             success = dao.updateLecture(lecturer);
         } else {
@@ -110,5 +91,4 @@ public class LecturerController {
             view.showErrorMessage("Failed to save lecturer profile!");
         }
     }
-
 }

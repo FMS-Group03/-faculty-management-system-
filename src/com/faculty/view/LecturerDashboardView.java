@@ -76,6 +76,33 @@ public class LecturerDashboardView extends JFrame {
         sidebar.add(btnSchedule);
         sidebar.add(btnCourses);
 
+        // Logout Button Implementation
+        JButton btnLogout = new JButton("\u21B3") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btnLogout.setFont(new Font("Segoe UI Symbol", Font.BOLD, 35));
+        btnLogout.setForeground(PRIMARY_PURPLE);
+        btnLogout.setBounds(115, 600, 70, 70);
+        btnLogout.setContentAreaFilled(false);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setFocusPainted(false);
+        btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnLogout.addActionListener(e -> {
+            this.dispose();
+            new LoginView().setVisible(true);
+        });
+
+        sidebar.add(btnLogout);
+
         return sidebar;
     }
 
@@ -231,6 +258,7 @@ public class LecturerDashboardView extends JFrame {
 
     private JButton createStyledButton(String text, int x, int y, int w, int h) {
         JButton btn = new JButton(text) {
+            @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -267,10 +295,6 @@ public class LecturerDashboardView extends JFrame {
     public DefaultTableModel getScheduleModel() { return scheduleModel; }
     public JTextField[] getProfileFields() {
         return new JTextField[]{tfName, tfLecturerId, tfDepartment, tfEmail, tfMobile};
-    }
-
-    public AbstractButton getTfLecturerId() {
-        return null;
     }
 
     public static class DashRoundedBorder implements javax.swing.border.Border {
