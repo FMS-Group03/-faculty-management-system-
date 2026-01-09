@@ -76,7 +76,9 @@ public class LecturerDashboardView extends JFrame {
         sidebar.add(btnSchedule);
         sidebar.add(btnCourses);
 
+        // Logout Button Implementation
         JButton btnLogout = new JButton("\u21B3") {
+            @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -256,6 +258,7 @@ public class LecturerDashboardView extends JFrame {
 
     private JButton createStyledButton(String text, int x, int y, int w, int h) {
         JButton btn = new JButton(text) {
+            @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

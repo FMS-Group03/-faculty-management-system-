@@ -3,7 +3,8 @@ package com.faculty.model;
 public class User {
     private String username;
     private String password;
-    private String role; // Admin, Student, or Lecturer
+    private String role;
+   // Admin, Student, or Lecturer
 
     public User() {
     }
@@ -12,7 +13,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+
+
+
+
+
     }
+
+
 
     public String getUsername() {
         return username;
@@ -37,6 +45,14 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+
+    //Student dashboard
+
+
+
+
+
 
     @Override
     public String toString() {
