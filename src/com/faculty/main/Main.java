@@ -28,8 +28,6 @@ public class Main {
             new LoginController(loginView);
             loginView.setVisible(true);
 
-            // Do NOT create Student/Admin views here
-            // They should be opened by LoginController after successful login
         });
     }
 }

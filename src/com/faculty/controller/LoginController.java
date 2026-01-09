@@ -5,6 +5,8 @@ import com.faculty.model.User;
 import com.faculty.view.AdminDashboardView;
 import com.faculty.view.LoginView;
 import com.faculty.view.StudentDashboardView;
+import com.faculty.view.LecturerDashboardView;
+import com.faculty.controller.LecturerController;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -95,7 +97,9 @@ public class LoginController {
 
             case "Lecturer":
             case "LECTURER":
-                JOptionPane.showMessageDialog(null, "Lecturer Dashboard Coming Soon!");
+                LecturerDashboardView lecturerView = new LecturerDashboardView(username);
+                new LecturerController(lecturerView, username);
+                lecturerView.setVisible(true);
                 break;
 
             default:
