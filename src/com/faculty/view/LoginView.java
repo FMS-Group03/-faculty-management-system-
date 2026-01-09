@@ -94,7 +94,7 @@ public class LoginView extends JFrame {
         lblSignUpTab = new JLabel("     Sign Up     ");
         lblSignUpTab.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblSignUpTab.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblSignUpTab.setBounds(260, 30, 180, 40);
+        lblSignUpTab.setBounds(260, 30, 200, 40);
 
         rightPanel.add(lblSignInTab);
         rightPanel.add(lblSignUpTab);
