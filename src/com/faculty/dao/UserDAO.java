@@ -227,31 +227,28 @@ public class UserDAO {
 
 
     public List<Course> getCoursesByLecturer(String lecturerId) {
-
         List<Course> list = new ArrayList<>();
-        String sql = "SELECT * FROM lecture_course_details WHERE Lecturer_Id=?";
+
+        // 1. Query එකේ කොලම් නම 'lecture_id' ලෙස නිවැරදි කළා
+        String sql = "SELECT * FROM lecture_course_details WHERE lecture_id = ?";
 
         try (PreparedStatement pst = dbConnection.prepareStatement(sql)) {
-
             pst.setString(1, lecturerId);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
+                // 2. rs.getString තුළ ඇති නම්ද දේටාබේස් එකට ගැලපෙන ලෙස සකසා ඇත
                 Course c = new Course(
-                        rs.getString("Lecturer_Id"),
-                        rs.getString("course_code"),
-                        rs.getString("course_name")
+                        rs.getString("lecture_id"), // මෙතනත් 'lecture_id' විය යුතුයි
+                        rs.getString("Course_Code"),
+                        rs.getString("Course_Name")
                 );
                 list.add(c);
             }
-
         } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
-
         return list;
     }
-
-
-
 }
