@@ -5,9 +5,9 @@ import com.faculty.view.AdminDashboardView.ManagementPanel;
 import com.faculty.view.LoginView;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 
 public class AdminController {
 
@@ -16,24 +16,29 @@ public class AdminController {
     public AdminController(AdminDashboardView view) {
         this.view = view;
         initController();
+        loadDemoData();
+
+        // Set Initial Active Tab
+        view.setActiveTab(view.getBtnStudents());
     }
 
     private void initController() {
-        // 1. Sidebar Navigation Logic
+        // 1. Sidebar Navigation
         setupSidebarNav(view.getBtnStudents(), "STUDENTS");
         setupSidebarNav(view.getBtnLecturers(), "LECTURERS");
         setupSidebarNav(view.getBtnCourses(), "COURSES");
         setupSidebarNav(view.getBtnDepartments(), "DEPARTMENTS");
         setupSidebarNav(view.getBtnDegrees(), "DEGREES");
 
+        // Logout
         view.addNavListener(view.getBtnLogout(), e -> {
             view.close();
-            // In real app: new LoginController(new LoginView());
-            System.out.println("Logged out");
+            LoginView loginView = new LoginView();
+            new LoginController(loginView);
+            loginView.setVisible(true);
         });
 
-        // 2. CRUD Logic for each Panel
-        // Since logic is the same, we reuse the method!
+        // 2. Attach CRUD Logic
         setupCRUDLogic(view.studentPanel, "Student");
         setupCRUDLogic(view.lecturerPanel, "Lecturer");
         setupCRUDLogic(view.coursePanel, "Course");
@@ -42,75 +47,89 @@ public class AdminController {
     }
 
     private void setupSidebarNav(JButton btn, String cardName) {
-        view.addNavListener(btn, e -> {
-            resetSidebarStyles();
-            btn.setBackground(Color.WHITE);
-            btn.setForeground(new Color(124, 77, 255));
+        btn.addActionListener(e -> {
+            // Tell the View this button is now Active
+            view.setActiveTab(btn);
             view.switchScreen(cardName);
         });
     }
 
-    private void resetSidebarStyles() {
-        Color purple = new Color(124, 77, 255);
-        resetBtn(view.getBtnStudents(), purple);
-        resetBtn(view.getBtnLecturers(), purple);
-        resetBtn(view.getBtnCourses(), purple);
-        resetBtn(view.getBtnDepartments(), purple);
-        resetBtn(view.getBtnDegrees(), purple);
-    }
-
-    private void resetBtn(JButton btn, Color c) {
-        btn.setBackground(c);
-        btn.setForeground(Color.WHITE);
-    }
-
-    /**
-     * Attaches Generic Add/Edit/Delete logic to a panel
-     */
     private void setupCRUDLogic(ManagementPanel panel, String entityName) {
-
-        // --- ADD ---
+        // ADD
         panel.btnAdd.addActionListener(e -> {
             int colCount = panel.model.getColumnCount();
             String[] emptyRow = new String[colCount];
-            emptyRow[0] = "[New " + entityName + "]"; // Placeholder
+            emptyRow[0] = "[New]";
             for (int i = 1; i < colCount; i++) emptyRow[i] = "-";
-
             panel.model.addRow(emptyRow);
-            view.showMessage("New row added to " + entityName + "s");
+            int newRowIdx = panel.model.getRowCount() - 1;
+            panel.table.setRowSelectionInterval(newRowIdx, newRowIdx);
         });
 
-        // --- EDIT ---
+        // EDIT (Smart Loop)
         panel.btnEdit.addActionListener(e -> {
             int selectedRow = panel.table.getSelectedRow();
             if (selectedRow != -1) {
-                String currentVal = (String) panel.model.getValueAt(selectedRow, 0);
-                String newVal = view.showInputDialog("Edit " + entityName + " Name:", currentVal);
+                int colCount = panel.model.getColumnCount();
+                for (int i = 0; i < colCount; i++) {
+                    String colName = panel.model.getColumnName(i);
+                    String currentVal = (String) panel.model.getValueAt(selectedRow, i);
+                    String newVal = view.showInputDialog("Edit " + colName + ":", currentVal);
 
-                if (newVal != null && !newVal.trim().isEmpty()) {
-                    panel.model.setValueAt(newVal, selectedRow, 0);
+                    if (newVal != null && !newVal.trim().isEmpty()) {
+                        panel.model.setValueAt(newVal, selectedRow, i);
+                    }
                 }
             } else {
-                view.showMessage("Please select a " + entityName + " to edit.");
+                view.showMessage("Please select a row to edit.");
             }
         });
 
-        // --- DELETE ---
+        // DELETE
         panel.btnDelete.addActionListener(e -> {
             int selectedRow = panel.table.getSelectedRow();
             if (selectedRow != -1) {
-                if (view.showConfirmDialog("Are you sure you want to delete this " + entityName + "?")) {
+                if (view.showConfirmDialog("Are you sure?")) {
                     panel.model.removeRow(selectedRow);
                 }
             } else {
-                view.showMessage("Please select a row to delete.");
+                view.showMessage("Select a row to delete.");
             }
         });
 
-        // --- SAVE ---
-        panel.btnSave.addActionListener(e -> {
-            view.showMessage("Data saved to Database successfully!");
-            // Here you would call DAO.save(panel.getData()...)
+        // SAVE
+        panel.btnSave.addActionListener(e -> view.showMessage("Saved!"));
+    }
+
+    private void loadDemoData() {
+        // Students
+        addRows(view.studentPanel.model, new String[][]{
+                {"Kumar Sangakkara", "ET/2022/007", "Eng Tech", "kumar@kln.ac.lk", "0771234567"},
+                {"Mahela Jayawardene", "ET/2022/008", "Eng Tech", "mahela@kln.ac.lk", "0772345678"}
         });
+        // Lecturers
+        addRows(view.lecturerPanel.model, new String[][]{
+                {"Dr. Kamalinie", "Software Eng", "OOP", "kamalinie@kln.ac.lk", "0711234567"},
+                {"Dr. Thilini", "Applied Comp", "Web", "thilini@kln.ac.lk", "0712345678"}
+        });
+        // Courses
+        addRows(view.coursePanel.model, new String[][]{
+                {"ETEC 21062", "OOP", "2", "Dr. Kamalinie"},
+                {"ETEC 31053", "DSA", "3", "Dr. Kamalinie"}
+        });
+        // Departments
+        addRows(view.deptPanel.model, new String[][]{
+                {"Software Eng", "Dr. Sidath", "IT", "15"},
+                {"Applied Comp", "Dr. Thilini", "BET", "12"}
+        });
+        // Degrees
+        addRows(view.degreePanel.model, new String[][]{
+                {"Eng Technology", "Applied Comp", "375"},
+                {"Info Technology", "Software Eng", "375"}
+        });
+    }
+
+    private void addRows(DefaultTableModel model, String[][] data) {
+        for (String[] row : data) model.addRow(row);
     }
 }

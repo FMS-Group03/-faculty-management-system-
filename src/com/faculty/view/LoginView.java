@@ -90,11 +90,11 @@ public class LoginView extends JFrame {
         lblSignInTab.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblSignInTab.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblSignInTab.setBounds(60, 30, 180, 40);
-//sing up button fix
+
         lblSignUpTab = new JLabel("     Sign Up     ");
         lblSignUpTab.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblSignUpTab.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblSignUpTab.setBounds(260, 30, 200, 40);
+        lblSignUpTab.setBounds(260, 30, 180, 40);
 
         rightPanel.add(lblSignInTab);
         rightPanel.add(lblSignUpTab);
@@ -181,6 +181,7 @@ public class LoginView extends JFrame {
 
 
     public void toggleAuthMode(String mode) {
+        this.authmode = mode;
         boolean isSignUp = mode.equals("SignUp");
 
         if (isSignUp) {
@@ -322,6 +323,31 @@ public class LoginView extends JFrame {
     public void showSuccessMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    private String authmode = "SignIn";
+
+
+    public String getAuthMode() {
+        return authmode;
+    }
+
+    public Label getTxtUsername() {
+        return null;
+    }
+
+    public Label getTxtPassword() {
+
+
+        return null;
+    }
+
+    public Label getTxtConfirmPassword() {
+        return null;
+    }
+
+    public AbstractButton getTglAdmin() {
+        return null;
+    }
 }
 
 
@@ -347,4 +373,13 @@ class RoundedBorder implements Border {
         g2.setStroke(new BasicStroke(2));
         g2.drawRoundRect(x + 1, y + 1, width - 2, height - 2, radius, radius);
     }
+
+
+
+
+
+
+
+
+
 }

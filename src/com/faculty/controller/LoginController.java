@@ -1,142 +1,109 @@
 package com.faculty.controller;
 
+import com.faculty.dao.UserDAO;
 import com.faculty.model.User;
+import com.faculty.view.AdminDashboardView;
 import com.faculty.view.LoginView;
 import com.faculty.view.StudentDashboardView;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.faculty.view.LecturerDashboardView;
+import com.faculty.controller.LecturerController;
+
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class LoginController {
 
     private LoginView view;
-
-    private boolean isSignUpMode = false;
+    private UserDAO userDAO;
 
     public LoginController(LoginView view) {
         this.view = view;
+        this.userDAO = new UserDAO();
         initController();
     }
 
     private void initController() {
-
-        this.view.addSignInTabListener(new MouseAdapter() {
+        // Tab Switching
+        view.addSignInTabListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                isSignUpMode = false; // Update state
-                view.toggleAuthMode("SignIn");
-            }
+            public void mouseClicked(MouseEvent e) { view.toggleAuthMode("SignIn"); }
         });
 
-        this.view.addSignUpTabListener(new MouseAdapter() {
+        view.addSignUpTabListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                isSignUpMode = true;
-                view.toggleAuthMode("SignUp");
-            }
+            public void mouseClicked(MouseEvent e) { view.toggleAuthMode("SignUp"); }
         });
 
+        view.addRoleButtonListener(e -> view.updateRoleButtonStyles());
 
-        this.view.addRoleButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.updateRoleButtonStyles();
-            }
-        });
-
-        this.view.addSignInButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAuthAction();
-            }
-        });
+        // Main Button Logic
+        view.addSignInButtonListener(e -> handleSubmit());
     }
 
-    private void handleAuthAction() {
+    private void handleSubmit() {
         String username = view.getUsernameInput();
         String password = view.getPasswordInput();
         String role = view.getSelectedRole();
-
+        String mode = view.getAuthMode();
 
         if (username.isEmpty() || password.isEmpty()) {
-            view.showErrorMessage("Username and Password cannot be empty!");
+            view.showErrorMessage("Please enter username and password.");
             return;
         }
 
-        if (isSignUpMode) {
-            handleSignUp(username, password, role);
+        if (mode.equals("SignUp")) {
+            // TEAM'S REGISTER LOGIC
+            User newUser = new User(username, password, role);
+            if (userDAO.registerUser(newUser)) {
+                view.showSuccessMessage("Account created! Please Sign In.");
+                view.toggleAuthMode("SignIn");
+            } else {
+                view.showErrorMessage("Signup Failed. Username might exist.");
+            }
         } else {
-            handleSignIn(username, password, role);
+            // TEAM'S LOGIN LOGIC
+            boolean isValid = userDAO.loginUser(username, password, role);
+
+            if (isValid) {
+                view.showSuccessMessage("Login Successful! Welcome, " + username);
+                view.dispose();
+
+                // PASS USERNAME TO OPEN DASHBOARD
+                openDashboard(username, role);
+            } else {
+                view.showErrorMessage("Login Failed! Check Username, Password, or Role.");
+            }
         }
     }
 
-    private void handleSignUp(String username, String password, String role) {
-        String confirmPass = view.getConfirmPasswordInput();
+    // --- UPDATED METHOD ---
+    private void openDashboard(String username, String role) {
+        switch (role) {
+            case "Admin":
+            case "ADMIN":
+                AdminDashboardView adminView = new AdminDashboardView();
+                new AdminController(adminView);
+                adminView.setVisible(true);
+                break;
 
-        if (!password.equals(confirmPass)) {
-            view.showErrorMessage("Passwords do not match!");
-            return;
-        }
+            case "Student":
+            case "STUDENT":
+                // --- FIX IS HERE ---
+                // We pass 'username' because StudentDashboardView requires it!
+                StudentDashboardView studentView = new StudentDashboardView(username);
+                studentView.setVisible(true);
+                break;
 
-        User newUser = new User(username, password, role);
+            case "Lecturer":
+            case "LECTURER":
+                LecturerDashboardView lecturerView = new LecturerDashboardView(username);
+                new LecturerController(lecturerView, username);
+                lecturerView.setVisible(true);
+                break;
 
-        System.out.println("Registering: " + newUser.toString());
-
-        view.showSuccessMessage("Account created successfully for " + role + "!");
-
-        isSignUpMode = false;
-        view.toggleAuthMode("SignIn");
-    }
-
-//    private void handleSignIn(String username, String password, String role) {
-//        // 1. Create temporary User object for comparison
-//        User loginAttempt = new User(username, password, role);
-//
-//        System.out.println("Attempting Login: " + loginAttempt.toString());
-//
-//        if (password.length() < 4) {
-//            view.showErrorMessage("Invalid Credentials (Password too short)");
-//        } else {
-//            view.showSuccessMessage("Welcome back, " + username + "!");
-//        }
-//    }
-
-    //by cs 22010 me
-    private void handleSignIn(String username, String password, String role) {
-        User loginAttempt = new User(username, password, role);
-        System.out.println("Attempting Login: " + loginAttempt.toString());
-
-        if (password.length() < 4) {
-            view.showErrorMessage("Invalid Credentials (Password too short)");
-            return;
-        }
-
-        // Close login window first
-        view.dispose();
-
-        // Open the Student Dashboard on the Event Dispatch Thread
-        if ("Student".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                new StudentDashboardView(username).setVisible(true);
-            });
-        } else if ("Admin".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Admin dashboard not implemented yet!");
-            });
-        } else if ("Lecturer".equals(role)) {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Lecturer dashboard not implemented yet!");
-            });
-        } else {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(null, "Invalid Role!");
-            });
+            default:
+                JOptionPane.showMessageDialog(null, "Unknown Role: " + role);
         }
     }
-
-
 }
