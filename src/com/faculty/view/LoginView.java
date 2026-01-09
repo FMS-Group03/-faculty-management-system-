@@ -209,9 +209,9 @@ public class LoginView extends JFrame {
 
     private void setupSignInLayout() {
         lblUser.setBounds(60, 140, 200, 30);
-        txtUsername.setBounds(60, 185, 370, 50);
+        txtUsername.setBounds(60, 185, 370, 60);
         lblPass.setBounds(60, 280, 200, 30);
-        txtPassword.setBounds(60, 325, 370, 50);
+        txtPassword.setBounds(60, 325, 370, 55);
         lblRole.setBounds(60, 400, 200, 30);
         rolePanel.setBounds(60, 450, 370, 45);
         btnSignIn.setBounds(60, 560, 370, 55);
@@ -219,11 +219,11 @@ public class LoginView extends JFrame {
 
     private void setupSignUpLayout() {
         lblUser.setBounds(60, 110, 200, 30);
-        txtUsername.setBounds(60, 150, 370, 50);
+        txtUsername.setBounds(60, 150, 370, 60);
         lblPass.setBounds(60, 220, 200, 30);
-        txtPassword.setBounds(60, 260, 370, 50);
+        txtPassword.setBounds(60, 260, 370, 55);
         lblConfirmPass.setBounds(60, 330, 250, 30);
-        txtConfirmPassword.setBounds(60, 370, 370, 50);
+        txtConfirmPassword.setBounds(60, 370, 370, 55);
         lblRole.setBounds(60, 440, 200, 30);
         rolePanel.setBounds(60, 480, 370, 45);
         btnSignIn.setBounds(60, 560, 370, 55);
