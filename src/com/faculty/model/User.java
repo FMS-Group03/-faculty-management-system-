@@ -3,8 +3,7 @@ package com.faculty.model;
 public class User {
     private String username;
     private String password;
-    private String role;
-   // Admin, Student, or Lecturer
+    private String role; // Admin, Student, or Lecturer
 
     public User() {
     }
@@ -19,8 +18,6 @@ public class User {
 
 
     }
-
-
 
     public String getUsername() {
         return username;

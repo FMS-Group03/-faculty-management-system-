@@ -15,6 +15,10 @@ import javax.swing.UIManager;
 public class Main {
     public static void main(String[] args) {
 
+<<<<<<< HEAD
+=======
+        //me
+>>>>>>> 9acfdf1f85331d2275884e34b28700e3d39d7b94
         SwingUtilities.invokeLater(() -> {
             try {
                 // Set system look and feel

@@ -38,7 +38,12 @@ public class AdminController {
             loginView.setVisible(true);
         });
 
+<<<<<<< HEAD
         // 2. Attach CRUD Logic
+=======
+        // 2. CRUD Logic for each Panel
+        // Since logic is the same, we reuse the method!
+>>>>>>> 9acfdf1f85331d2275884e34b28700e3d39d7b94
         setupCRUDLogic(view.studentPanel, "Student");
         setupCRUDLogic(view.lecturerPanel, "Lecturer");
         setupCRUDLogic(view.coursePanel, "Course");
@@ -128,8 +133,11 @@ public class AdminController {
                 {"Info Technology", "Software Eng", "375"}
         });
     }
+<<<<<<< HEAD
 
     private void addRows(DefaultTableModel model, String[][] data) {
         for (String[] row : data) model.addRow(row);
     }
+=======
+>>>>>>> 9acfdf1f85331d2275884e34b28700e3d39d7b94
 }

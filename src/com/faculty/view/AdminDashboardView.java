@@ -294,6 +294,7 @@ public class AdminDashboardView extends JFrame {
             this.btnSave = btnSave;
         }
     }
+<<<<<<< HEAD
 
     private static class RoundedBorder implements Border {
         private int radius;
@@ -308,4 +309,6 @@ public class AdminDashboardView extends JFrame {
             g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
         }
     }
+=======
+>>>>>>> 9acfdf1f85331d2275884e34b28700e3d39d7b94
 }

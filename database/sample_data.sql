@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 --
 -- Dumping data for table `sign_up_table`
 --
@@ -36,3 +37,5 @@ INSERT INTO `lecture_course_details` (`Lecture_Id`, `Course_Code`, `Course_Name`
 INSERT INTO `lecture_dashboard` (`Lecture_Id`, `Full_Name`, `Department`, `Lecture_Email`, `Lecture_Mobile_Number`) VALUES
 ('Lec_2022_042', 'Dilshan Rathnayake', 'Cyber Security', 'rathnayake@gmail.com', '0715648724'),
 ('SE_2022_082', 'Kavindu', 'software', 'kavindu@gmail.com', '0725364973');
+=======
+>>>>>>> 9acfdf1f85331d2275884e34b28700e3d39d7b94
